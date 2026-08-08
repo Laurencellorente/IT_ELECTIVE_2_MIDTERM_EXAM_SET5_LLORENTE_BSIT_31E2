@@ -1,0 +1,204 @@
+﻿@model IEnumerable<EquipmentBorrowing>
+@{
+    ViewData["Title"] = "Monitoring List";
+}
+
+<div class="fade-in-up">
+    
+    <div class="row mb-4 g-3">
+        <div class="col-md-4">
+            <div class="card card-dark-glass p-3 border-start border-primary border-4 stat-card active-filter" 
+                 data-filter="all" 
+                 style="cursor: pointer; transition: transform 0.2s, border-color 0.2s;" 
+                 title="Click to show all loans">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary small fw-bold">TOTAL LOANS</span>
+                        <h2 class="fw-bold mb-0 text-white">@Model.Count()</h2>
+                    </div>
+                    <div class="fs-1 text-primary"><i class="bi bi-journal-text"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-dark-glass p-3 border-start border-warning border-4 stat-card" 
+                 data-filter="Borrowed" 
+                 style="cursor: pointer; transition: transform 0.2s, border-color 0.2s;" 
+                 title="Click to filter Borrowed loans">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary small fw-bold">ACTIVE / BORROWED</span>
+                        <h2 class="fw-bold mb-0 text-warning">@Model.Count(x => x.Status == "Borrowed")</h2>
+                    </div>
+                    <div class="fs-1 text-warning"><i class="bi bi-clock-history"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-dark-glass p-3 border-start border-success border-4 stat-card" 
+                 data-filter="Returned" 
+                 style="cursor: pointer; transition: transform 0.2s, border-color 0.2s;" 
+                 title="Click to filter Returned loans">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary small fw-bold">RETURNED</span>
+                        <h2 class="fw-bold mb-0 text-success">@Model.Count(x => x.Status == "Returned")</h2>
+                    </div>
+                    <div class="fs-1 text-success"><i class="bi bi-check2-circle"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-white mb-0"><i class="bi bi-display me-2"></i>Equipment Borrowing List</h3>
+        <a asp-action="Create" class="btn btn-primary btn-animated px-3">
+            <i class="bi bi-plus-lg me-1"></i> Register New Loan
+        </a>
+    </div>
+
+    
+    <div class="card card-dark-glass overflow-hidden">
+        <div class="card-header bg-transparent border-secondary py-3">
+            <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" 
+                       id="searchInput" 
+                       class="form-control" 
+                       placeholder="Type to filter borrower, item, TXN, status..." 
+                       autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-secondary">
+                        <th class="ps-3"><i class="bi bi-hash"></i> TXN</th>
+                        <th><i class="bi bi-person"></i> Borrower</th>
+                        <th><i class="bi bi-box"></i> Equipment</th>
+                        <th><i class="bi bi-123"></i> Qty</th>
+                        <th><i class="bi bi-calendar-event"></i> Borrow Date</th>
+                        <th><i class="bi bi-info-circle"></i> Status</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="borrowingTableBody">
+                    @if (!Model.Any())
+                    {
+                        <tr id="emptyDbRow">
+                            <td colspan="7" class="text-center py-4 text-secondary">
+                                <i class="bi bi-inbox fs-2 d-block mb-1"></i> No records found.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="searchable-row" data-status="@item.Status">
+                                <td class="ps-3 fw-bold text-info">@item.TransactionNumber</td>
+                                <td>
+                                    <strong class="text-white">@item.BorrowerName</strong>
+                                    <div class="small text-secondary">@item.BorrowerId | @item.DepartmentOrCourse</div>
+                                </td>
+                                <td>
+                                    <strong class="text-white">@item.EquipmentName</strong>
+                                    <div class="small text-secondary">@item.EquipmentCategory</div>
+                                </td>
+                                <td><span class="badge bg-secondary">@item.Quantity</span></td>
+                                <td>@item.BorrowDateTime.ToString("MMM dd, yyyy h:mm tt")</td>
+                                <td>
+                                    <span class="badge rounded-pill @(item.Status == "Borrowed" ? "bg-warning text-dark" : "bg-success") px-3 py-2">
+                                        <i class="bi @(item.Status == "Borrowed" ? "bi-arrow-repeat" : "bi-check-all") me-1"></i> @item.Status
+                                    </span>
+                                </td>
+                                <td class="text-end pe-3">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1" title="Details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary me-1" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    @if (item.Status == "Borrowed")
+                                    {
+                                        <a asp-action="Return" asp-route-id="@item.Id" class="btn btn-sm btn-success btn-animated" title="Return">
+                                            <i class="bi bi-box-arrow-in-left me-1"></i> Return
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    <tr id="noMatchRow" style="display: none;">
+                        <td colspan="7" class="text-center py-4 text-secondary">
+                            <i class="bi bi-search fs-2 d-block mb-1"></i> No matching records found.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const rows = document.querySelectorAll('.searchable-row');
+            const noMatchRow = document.getElementById('noMatchRow');
+            const statCards = document.querySelectorAll('.stat-card');
+
+            let currentStatusFilter = 'all';
+
+            function filterTable() {
+                const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                let visibleCount = 0;
+
+                rows.forEach(row => {
+                    const rowStatus = row.getAttribute('data-status');
+                    const rowText = row.textContent.toLowerCase();
+
+                    const matchesStatus = (currentStatusFilter === 'all') || (rowStatus === currentStatusFilter);
+                    const matchesSearch = rowText.includes(query);
+
+                    if (matchesStatus && matchesSearch) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (noMatchRow) {
+                    noMatchRow.style.display = (visibleCount === 0 && rows.length > 0) ? '' : 'none';
+                }
+            }
+
+            
+            statCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    
+                    statCards.forEach(c => {
+                        c.style.opacity = '0.6';
+                        c.style.transform = 'scale(0.98)';
+                    });
+                    this.style.opacity = '1';
+                    this.style.transform = 'scale(1.02)';
+
+                    
+                    currentStatusFilter = this.getAttribute('data-filter');
+                    filterTable();
+                });
+            });
+
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', filterTable);
+            }
+        });
+    </script>
+}

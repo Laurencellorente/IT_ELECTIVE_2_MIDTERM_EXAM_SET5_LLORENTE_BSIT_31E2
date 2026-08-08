@@ -1,0 +1,167 @@
+﻿@model EquipmentBorrowing
+@{
+    ViewData["Title"] = "Register Borrowing";
+}
+
+<div class="card card-dark-glass p-3 fade-in-up">
+    <div class="card-header bg-transparent border-secondary text-white d-flex align-items-center gap-2">
+        <i class="bi bi-plus-circle-fill text-primary fs-4"></i>
+        <h4 class="mb-0 fw-bold">Register Equipment Borrowing</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="BorrowerName" class="form-label text-light">
+                        <i class="bi bi-person me-1"></i> Borrower Name
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-person-fill"></i></span>
+                        <input asp-for="BorrowerName" class="form-control" placeholder="Full Name" />
+                    </div>
+                    <span asp-validation-for="BorrowerName" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label asp-for="BorrowerType" class="form-label text-light">
+                        <i class="bi bi-person-badge me-1"></i> Borrower Type
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-tags-fill"></i></span>
+                        <select asp-for="BorrowerType" class="form-select">
+                            <option value="">Select...</option>
+                            <option value="Student">Student</option>
+                            <option value="Faculty">Faculty</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="BorrowerType" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label asp-for="BorrowerId" class="form-label text-light">
+                        <i class="bi bi-card-heading me-1"></i> Student/Faculty ID
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-card-text"></i></span>
+                        <input asp-for="BorrowerId" class="form-control" placeholder="ID Number" />
+                    </div>
+                    <span asp-validation-for="BorrowerId" class="text-danger small"></span>
+                </div>
+            </div>
+
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DepartmentOrCourse" class="form-label text-light">
+                        <i class="bi bi-building me-1"></i> Department / Course
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-diagram-3-fill"></i></span>
+                        <input asp-for="DepartmentOrCourse" class="form-control" placeholder="BSIT, College of Computer Studies..." />
+                    </div>
+                    <span asp-validation-for="DepartmentOrCourse" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label asp-for="EquipmentName" class="form-label text-light">
+                        <i class="bi bi-box-seam me-1"></i> Equipment Name
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-laptop"></i></span>
+                        <input asp-for="EquipmentName" class="form-control" placeholder="e.g. Projector HD-01" />
+                    </div>
+                    <span asp-validation-for="EquipmentName" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label asp-for="EquipmentCategory" class="form-label text-light">
+                        <i class="bi bi-grid me-1"></i> Category
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-collection"></i></span>
+                        <input asp-for="EquipmentCategory" class="form-control" placeholder="e.g. Audio/Visual" />
+                    </div>
+                    <span asp-validation-for="EquipmentCategory" class="text-danger small"></span>
+                </div>
+            </div>
+
+            
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Quantity" class="form-label text-light">
+                        <i class="bi bi-123 me-1"></i> Quantity
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-hash"></i></span>
+                        <input asp-for="Quantity" class="form-control" type="number" min="1" />
+                    </div>
+                    <span asp-validation-for="Quantity" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="BorrowDateTime" class="form-label text-light">
+                        <i class="bi bi-calendar-event me-1"></i> Borrow Date & Time
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-calendar-plus"></i></span>
+                        <input asp-for="BorrowDateTime" 
+                               class="form-control" 
+                               type="datetime-local" 
+                               step="60" 
+                               value="@(Model?.BorrowDateTime.ToString("yyyy-MM-ddTHH:mm") ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm"))" />
+                    </div>
+                    <span asp-validation-for="BorrowDateTime" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="ExpectedReturnDate" class="form-label text-light">
+                        <i class="bi bi-calendar-check me-1"></i> Expected Return Date
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-calendar2-week"></i></span>
+                        <input asp-for="ExpectedReturnDate" 
+                               class="form-control" 
+                               type="datetime-local" 
+                               step="60" 
+                               value="@(Model?.ExpectedReturnDate.ToString("yyyy-MM-ddTHH:mm") ?? DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm"))" />
+                    </div>
+                    <span asp-validation-for="ExpectedReturnDate" class="text-danger small"></span>
+                </div>
+            </div>
+
+            
+            <div class="mb-3">
+                <label asp-for="Purpose" class="form-label text-light">
+                    <i class="bi bi-chat-left-text me-1"></i> Purpose
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-info-circle"></i></span>
+                    <textarea asp-for="Purpose" class="form-control" rows="2" placeholder="Reason for borrowing..."></textarea>
+                </div>
+                <span asp-validation-for="Purpose" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Notes" class="form-label text-light">
+                    <i class="bi bi-journal-text me-1"></i> Additional Notes
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-pencil"></i></span>
+                    <textarea asp-for="Notes" class="form-control" rows="2" placeholder="Optional comments or condition upon release..."></textarea>
+                </div>
+                <span asp-validation-for="Notes" class="text-danger small"></span>
+            </div>
+
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success btn-animated fw-bold px-4">
+                    <i class="bi bi-save me-1"></i> Save Loan Record
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

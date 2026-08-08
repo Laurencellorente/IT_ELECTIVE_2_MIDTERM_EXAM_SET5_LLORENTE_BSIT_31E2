@@ -1,0 +1,26 @@
+﻿@model EquipmentBorrowing
+@{
+    ViewData["Title"] = "Return Equipment";
+}
+
+<div class="card shadow-sm border-success">
+    <div class="card-header bg-success text-white">
+        <h4>Process Return - @Model.TransactionNumber</h4>
+    </div>
+    <div class="card-body">
+        <p class="lead">Confirm return for item: <strong>@Model.EquipmentName</strong> (Qty: @Model.Quantity)</p>
+        <p><strong>Borrower:</strong> @Model.BorrowerName (@Model.BorrowerId)</p>
+
+        <form asp-action="ConfirmReturn" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            
+            <div class="mb-3">
+                <label for="notes" class="form-label">Return Notes / Condition Comments (Optional):</label>
+                <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="e.g., Returned in good condition."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Confirm Return</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

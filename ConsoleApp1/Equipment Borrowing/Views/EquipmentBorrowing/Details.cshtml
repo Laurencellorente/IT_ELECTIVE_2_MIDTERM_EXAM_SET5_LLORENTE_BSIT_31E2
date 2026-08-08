@@ -1,0 +1,52 @@
+﻿@model EquipmentBorrowing
+@{
+    ViewData["Title"] = "Transaction Details";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-info text-white d-flex justify-content-between">
+        <h4 class="mb-0">Transaction: @Model.TransactionNumber</h4>
+        <span class="badge @(Model.Status == "Borrowed" ? "bg-warning text-dark" : "bg-success")">@Model.Status</span>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Borrower Name</dt>
+            <dd class="col-sm-9">@Model.BorrowerName (@Model.BorrowerType)</dd>
+
+            <dt class="col-sm-3">Student/Employee ID</dt>
+            <dd class="col-sm-9">@Model.BorrowerId</dd>
+
+            <dt class="col-sm-3">Department/Course</dt>
+            <dd class="col-sm-9">@Model.DepartmentOrCourse</dd>
+
+            <dt class="col-sm-3">Equipment Item</dt>
+            <dd class="col-sm-9">@Model.EquipmentName (@Model.EquipmentCategory)</dd>
+
+            <dt class="col-sm-3">Quantity</dt>
+            <dd class="col-sm-9">@Model.Quantity</dd>
+
+            <dt class="col-sm-3">Borrow Date & Time</dt>
+            <dd class="col-sm-9">@Model.BorrowDateTime.ToString("F")</dd>
+
+            <dt class="col-sm-3">Expected Return Date</dt>
+            <dd class="col-sm-9">@Model.ExpectedReturnDate.ToString("F")</dd>
+
+            <dt class="col-sm-3">Actual Return Date</dt>
+            <dd class="col-sm-9">@(Model.ActualReturnDateTime.HasValue ? Model.ActualReturnDateTime.Value.ToString("F") : "N/A")</dd>
+
+            <dt class="col-sm-3">Purpose</dt>
+            <dd class="col-sm-9">@Model.Purpose</dd>
+
+            <dt class="col-sm-3">Notes</dt>
+            <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Notes) ? "None" : Model.Notes)</dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        @if (Model.Status == "Borrowed")
+        {
+            <a asp-action="Return" asp-route-id="@Model.Id" class="btn btn-success">Process Return</a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
